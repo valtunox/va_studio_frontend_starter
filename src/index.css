@@ -108,6 +108,23 @@
   transform: translateY(0);
 }
 
+/* ── Hero Prompt Card Animated Glow Border ──────────────── */
+@keyframes prompt-glow-rotate {
+  0% { --prompt-angle: 0deg; }
+  100% { --prompt-angle: 360deg; }
+}
+
+@property --prompt-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.hero-prompt-glow {
+  background: conic-gradient(from var(--prompt-angle), #6366f1, #8b5cf6, #a78bfa, #c084fc, #8b5cf6, #6366f1);
+  animation: prompt-glow-rotate 4s linear infinite;
+}
+
 /* ── AI Thinking Loader ─────────────────────────────────── */
 .ai-thinking-container {
   display: flex;
