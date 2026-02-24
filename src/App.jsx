@@ -1,41 +1,33 @@
 /**
- * VA Studio - Main Application Entry Point
+ * VA Studio Frontend Starter - Main Application Entry Point
  *
- * Public-first architecture: no login required.
+ * This starter app now defaults to the Gym template as the main interface.
+ * The welcome/showcase functionality has been moved to va_studio_ai_builder_frontend.
  *
  * Routes:
- *   /                          → Welcome page (template gallery + hero)
+ *   /                          → Gym template (default)
  *   /preview/:templateId       → Live template preview (ecommerce, saas, portfolio, etc.)
  *
  * Backend connectivity:
- *   On mount, the app calls healthApi.check() to verify the FastAPI backend
- *   at http://localhost:5112 is running. A persistent status badge in the
- *   navbar shows "Online", "Offline", or "Degraded" in real-time.
- *   The status is polled every 30s (online) or 10s (offline).
- *
- * All 17 templates are loaded dynamically via React.lazy + code-splitting.
- * The welcome page serves as the entry point where users browse templates,
- * chat with AI, and request customizations — all without signing in.
+ *   A connectivity test banner appears at the top showing real-time backend status.
+ *   The status is polled every 30s (online) or 10s (offline) via healthApi.check().
  *
  * @module App
- * @version 1.1.0
+ * @version 2.0.0
  * @see {@link ../templates/} for individual template implementations
- * @see {@link ./pages/WelcomePage.jsx} for the template gallery
  * @see {@link ./hooks/useBackendStatus.js} for health-check logic
  * @see {@link ./lib/api.js} for backend API client
  */
 
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider, useParams, Link } from 'react-router-dom'
-import { BackendStatusProvider } from './context/BackendStatusContext'
-import WelcomePage from './pages/WelcomePage'
+import { BackendStatusProvider, useBackendContext } from './context/BackendStatusContext'
 
 /* ------------------------------------------------------------------ */
-/*  Lazy-loaded auth pages                                             */
+/*  Default Gym Template (main app interface)                          */
 /* ------------------------------------------------------------------ */
 
-const LoginPage = lazy(() => import('./pages/auth/login/LoginPage.jsx'))
-const RegisterPage = lazy(() => import('./pages/auth/register/RegisterPage.jsx'))
+const GymApp = lazy(() => import('../templates/gym/App.jsx'))
 
 /* ------------------------------------------------------------------ */
 /*  Lazy-loaded template components (code-split per template)          */
@@ -64,6 +56,89 @@ const templates = {
   register: lazy(() => import('../templates/register/App.jsx')),
   onboarding: lazy(() => import('../templates/onboarding/App.jsx')),
   leads: lazy(() => import('../templates/leads/App.jsx')),
+}
+
+/* ------------------------------------------------------------------ */
+/*  Backend Connectivity Test Banner                                   */
+/* ------------------------------------------------------------------ */
+
+function ConnectivityBanner() {
+  const { status, latency, details, retry } = useBackendContext()
+
+  const statusConfig = {
+    checking: {
+      bg: 'bg-slate-100 dark:bg-slate-800',
+      text: 'text-slate-600 dark:text-slate-400',
+      icon: '⏳',
+      label: 'Checking backend...',
+    },
+    online: {
+      bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+      text: 'text-emerald-700 dark:text-emerald-400',
+      icon: '✓',
+      label: 'Backend Online',
+    },
+    degraded: {
+      bg: 'bg-amber-50 dark:bg-amber-950/30',
+      text: 'text-amber-700 dark:text-amber-400',
+      icon: '⚠',
+      label: 'Backend Degraded',
+    },
+    offline: {
+      bg: 'bg-rose-50 dark:bg-rose-950/30',
+      text: 'text-rose-700 dark:text-rose-400',
+      icon: '✕',
+      label: 'Backend Offline',
+    },
+  }
+
+  const config = statusConfig[status] || statusConfig.checking
+
+  return (
+    <div className={`${config.bg} border-b border-slate-200 dark:border-slate-700`}>
+      <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-sm">
+        <div className="flex items-center gap-3">
+          <span className="text-lg">{config.icon}</span>
+          <span className={`font-medium ${config.text}`}>{config.label}</span>
+          {latency && (
+            <span className="text-slate-500 dark:text-slate-400">
+              {latency}ms
+            </span>
+          )}
+          {details && (
+            <span className="text-slate-500 dark:text-slate-400 text-xs">
+              {details.app} v{details.version}
+            </span>
+          )}
+        </div>
+        <button
+          onClick={retry}
+          className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors text-xs font-medium"
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Template Loader (loading state)                                    */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/*  Home Page (Gym Template with Connectivity Banner)                  */
+/* ------------------------------------------------------------------ */
+
+function HomePage() {
+  return (
+    <>
+      <ConnectivityBanner />
+      <Suspense fallback={<TemplateLoader />}>
+        <GymApp />
+      </Suspense>
+    </>
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -119,15 +194,13 @@ function TemplatePreview() {
 /* ------------------------------------------------------------------ */
 /*  Router                                                             */
 /*                                                                     */
-/*  /                     → Welcome page with template gallery         */
+/*  /                     → Gym template (default)                     */
 /*  /preview/:templateId  → Live preview of a specific template        */
 /* ------------------------------------------------------------------ */
 
 const router = createBrowserRouter([
-  { path: '/', element: <WelcomePage /> },
+  { path: '/', element: <HomePage /> },
   { path: '/preview/:templateId', element: <TemplatePreview /> },
-  { path: '/auth/login', element: <Suspense fallback={<TemplateLoader />}><LoginPage /></Suspense> },
-  { path: '/auth/register', element: <Suspense fallback={<TemplateLoader />}><RegisterPage /></Suspense> },
 ])
 
 /**

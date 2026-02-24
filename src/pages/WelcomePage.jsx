@@ -1,7 +1,7 @@
 /**
  * WelcomePage — VA Studio Landing Page & Template Gallery
  *
- * Modern SaaS landing page inspired by Lovable.dev, Bolt.new, v0.dev.
+ * Modern SaaS landing page inspired by valtunox.dev, Bolt.new, v0.dev.
  *
  * Sections:
  *   1. Hero with dramatic gradient, prompt input, social proof
