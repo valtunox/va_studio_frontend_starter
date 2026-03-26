@@ -32,8 +32,8 @@ const categories = [
 ]
 
 const flashDeals = [
-  { id: 'fd1', name: 'Wireless Earbuds Pro', price: 29.99, original: 49.99, discount: 40, rating: 4.5, sold: 2341, category: 'Electronics', image: 'https://images.unsplash.com/photo-1590658268037-6bf12f032f55?w=400&h=400&fit=crop' },
-  { id: 'fd2', name: 'Smart Watch Ultra', price: 89.00, original: 149.00, discount: 40, rating: 4.7, sold: 1822, category: 'Electronics', image: 'https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=400&h=400&fit=crop' },
+  { id: 'fd1', name: 'Wireless Earbuds Pro', price: 29.99, original: 49.99, discount: 40, rating: 4.5, sold: 2341, category: 'Electronics', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop' },
+  { id: 'fd2', name: 'Smart Watch Ultra', price: 89.00, original: 149.00, discount: 40, rating: 4.7, sold: 1822, category: 'Electronics', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop' },
   { id: 'fd3', name: 'Running Shoes Air', price: 45.00, original: 79.00, discount: 43, rating: 4.3, sold: 3105, category: 'Sports', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop' },
   { id: 'fd4', name: 'Leather Travel Backpack', price: 25.00, original: 55.00, discount: 55, rating: 4.6, sold: 1567, category: 'Fashion', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop' },
   { id: 'fd5', name: 'Bluetooth Speaker', price: 35.00, original: 59.00, discount: 41, rating: 4.4, sold: 2890, category: 'Electronics', image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop' },
