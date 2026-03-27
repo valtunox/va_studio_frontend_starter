@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import {
   Rocket, Mail, Lock, Eye, EyeOff, ArrowRight, Github, Chrome,
-  Sparkles, Shield, Zap, Globe, Loader2, Monitor
+  Sparkles, Shield, Zap, Globe, Loader2, Monitor, AlertCircle, CheckCircle2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ThemeSwitcher } from '@/components/shared/ThemeSwitcher'
+import { useAuth } from '@/context/AuthContext'
 
 const features = [
   { icon: Sparkles, title: 'AI-Powered Tools', desc: 'Smart template customization with built-in AI assistance' },
@@ -16,16 +17,35 @@ const features = [
   { icon: Globe, title: 'Global CDN', desc: '99.99% uptime with edge caching worldwide' },
 ]
 
-function App() {
+function App({ onNavigate }) {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const { login } = useAuth()
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    setError('')
+    setSuccess('')
+    if (!email || !password) {
+      setError('Please enter your email and password')
+      return
+    }
     setLoading(true)
-    setTimeout(() => setLoading(false), 2000)
+    try {
+      await login({ email, password })
+      setSuccess('Login successful! Redirecting...')
+      setTimeout(() => {
+        if (onNavigate) onNavigate('ecommerce')
+      }, 600)
+    } catch (err) {
+      setError(err.message || 'Login failed. Please check your credentials.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -128,6 +148,20 @@ function App() {
               </div>
             </div>
 
+            {/* Error / Success Messages */}
+            {error && (
+              <div className="flex items-center gap-2 p-3 mb-4 rounded-xl bg-red-500/20 border border-red-400/30 text-red-200 text-sm">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+            {success && (
+              <div className="flex items-center gap-2 p-3 mb-4 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{success}</span>
+              </div>
+            )}
+
             {/* Form */}
             <div className="space-y-4">
               <div className="space-y-2">
@@ -205,7 +239,7 @@ function App() {
             {/* Sign Up Link */}
             <p className="text-center text-sm text-white/50 mt-8">
               Don't have an account?{' '}
-              <a href="#" className="text-purple-300 hover:text-purple-200 font-medium transition-colors">Sign up</a>
+              <button onClick={() => onNavigate && onNavigate('register')} className="text-purple-300 hover:text-purple-200 font-medium transition-colors">Sign up</button>
             </p>
           </div>
 

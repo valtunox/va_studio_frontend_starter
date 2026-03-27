@@ -2,12 +2,13 @@ import { useState } from 'react'
 import {
   Rocket, Mail, Lock, Eye, EyeOff, ArrowRight, Github, User,
   Shield, Zap, Globe, Check, X, Loader2, Monitor,
-  Sparkles, CheckCircle2, Star, Users
+  Sparkles, CheckCircle2, Star, Users, AlertCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ThemeSwitcher } from '@/components/shared/ThemeSwitcher'
+import { useAuth } from '@/context/AuthContext'
 
 function getPasswordStrength(pw) {
   let score = 0
@@ -35,7 +36,7 @@ const benefitsList = [
   { icon: Star, title: 'Priority Support', desc: '24/7 dedicated engineering support' },
 ]
 
-function App() {
+function App({ onNavigate }) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [fullName, setFullName] = useState('')
@@ -44,6 +45,9 @@ function App() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [agreeTerms, setAgreeTerms] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const { register, login } = useAuth()
 
   const strength = getPasswordStrength(password)
   const passwordsMatch = password && confirmPassword && password === confirmPassword
@@ -56,9 +60,39 @@ function App() {
     { label: 'Special character', met: /[^A-Za-z0-9]/.test(password) },
   ]
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    setError('')
+    setSuccess('')
+    if (!fullName || !email || !password) {
+      setError('Please fill in all fields')
+      return
+    }
+    if (!passwordsMatch) {
+      setError('Passwords do not match')
+      return
+    }
+    if (strength < 3) {
+      setError('Password is too weak — needs uppercase, number, and 8+ characters')
+      return
+    }
+    if (!agreeTerms) {
+      setError('Please agree to the Terms of Service')
+      return
+    }
     setLoading(true)
-    setTimeout(() => setLoading(false), 2000)
+    try {
+      await register({ email, password, full_name: fullName })
+      setSuccess('Account created! Signing you in...')
+      // Auto-login after registration
+      await login({ email, password })
+      setTimeout(() => {
+        if (onNavigate) onNavigate('ecommerce')
+      }, 600)
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -154,6 +188,20 @@ function App() {
                 <span className="px-4 text-xs text-white/40 bg-transparent backdrop-blur-xl">or continue with</span>
               </div>
             </div>
+
+            {/* Error / Success Messages */}
+            {error && (
+              <div className="flex items-center gap-2 p-3 mb-4 rounded-xl bg-red-500/20 border border-red-400/30 text-red-200 text-sm">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+            {success && (
+              <div className="flex items-center gap-2 p-3 mb-4 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{success}</span>
+              </div>
+            )}
 
             {/* Form */}
             <div className="space-y-4">
@@ -324,7 +372,7 @@ function App() {
             {/* Sign In Link */}
             <p className="text-center text-sm text-white/50 mt-8">
               Already have an account?{' '}
-              <a href="#" className="text-purple-300 hover:text-purple-200 font-medium transition-colors">Sign in</a>
+              <button onClick={() => onNavigate && onNavigate('login')} className="text-purple-300 hover:text-purple-200 font-medium transition-colors">Sign in</button>
             </p>
           </div>
 

@@ -23,6 +23,7 @@ import { lazy, Suspense, useState } from 'react'
 import { createBrowserRouter, RouterProvider, useParams, Link } from 'react-router-dom'
 import { BackendStatusProvider, useBackendContext } from './context/BackendStatusContext'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { TemplateSwitcher } from './components/shared/TemplateSwitcher'
 
 /* ------------------------------------------------------------------ */
@@ -126,14 +127,31 @@ function ConnectivityBanner() {
 
 function HomePage() {
   const { isDark } = useTheme()
+  const { user, isAuthenticated, logout } = useAuth()
   const [activeTemplate, setActiveTemplate] = useState('ecommerce')
   const ActiveComponent = templates[activeTemplate]
+
+  // onNavigate lets login/register switch templates
+  const handleNavigate = (templateId) => {
+    if (templates[templateId]) setActiveTemplate(templateId)
+  }
 
   return (
     <div className={isDark ? 'dark' : ''}>
       <ConnectivityBanner />
+      {/* Auth status bar */}
+      {isAuthenticated && (
+        <div className="bg-indigo-600 dark:bg-indigo-900 text-white text-sm">
+          <div className="max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-between">
+            <span>Signed in as <strong>{user?.full_name || user?.email}</strong></span>
+            <button onClick={logout} className="text-indigo-200 hover:text-white transition-colors text-xs font-medium">
+              Sign out
+            </button>
+          </div>
+        </div>
+      )}
       <Suspense fallback={<TemplateLoader />}>
-        <ActiveComponent key={activeTemplate} />
+        <ActiveComponent key={activeTemplate} onNavigate={handleNavigate} />
       </Suspense>
       <TemplateSwitcher activeTemplate={activeTemplate} onSelect={setActiveTemplate} />
     </div>
@@ -276,9 +294,11 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <ThemeProvider>
-      <BackendStatusProvider>
-        <RouterProvider router={router} />
-      </BackendStatusProvider>
+      <AuthProvider>
+        <BackendStatusProvider>
+          <RouterProvider router={router} />
+        </BackendStatusProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
