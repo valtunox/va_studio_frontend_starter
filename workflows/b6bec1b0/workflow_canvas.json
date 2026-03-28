@@ -1,0 +1,166 @@
+{
+  "workflow": {
+    "name": "AutomatedWorfklowDemo1",
+    "version": "1.0.0",
+    "session_id": "b6bec1b0-4595-4e61-8474-8cf1e0dfacbb",
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "trigger",
+        "config": {
+          "_organization": "joelwembo",
+          "_username": "joelwembo",
+          "cloud_provider": "internal",
+          "data": {
+            "description": "Start your workflow - drag nodes from the sidebar to build your infrastructure",
+            "label": "Trigger"
+          },
+          "description": "Workflow entry point",
+          "intent": "workflow_start",
+          "resource_type": "workflow_trigger"
+        },
+        "position": {
+          "x": -150,
+          "y": -165
+        },
+        "data": {
+          "description": "Start your workflow - drag nodes from the sidebar to build your infrastructure",
+          "label": "Trigger",
+          "properties": {}
+        }
+      },
+      {
+        "id": "2",
+        "type": "action",
+        "config": {
+          "_organization": "joelwembo",
+          "_username": "joelwembo",
+          "cloud_provider": "cloudflare",
+          "data": {
+            "description": "Edge compute platform",
+            "label": "Cloudflare Workers"
+          },
+          "intent": "provision_serverless",
+          "resource_type": "cloudflare_worker_script"
+        },
+        "position": {
+          "x": 660,
+          "y": -15
+        },
+        "data": {
+          "description": "Edge compute platform",
+          "label": "Cloudflare Workers"
+        }
+      },
+      {
+        "id": "3",
+        "type": "action",
+        "config": {
+          "_organization": "joelwembo",
+          "_username": "joelwembo",
+          "cloud_provider": "aws",
+          "data": {
+            "description": "Virtual server in AWS",
+            "label": "EC2 Instance"
+          },
+          "instance_type": "t3.micro",
+          "intent": "provision_vm",
+          "os": "ubuntu",
+          "resource_type": "aws_instance"
+        },
+        "position": {
+          "x": 1035,
+          "y": -15
+        },
+        "data": {
+          "description": "Virtual server in AWS",
+          "label": "EC2 Instance"
+        }
+      },
+      {
+        "id": "4",
+        "type": "action",
+        "config": {
+          "_organization": "joelwembo",
+          "_username": "joelwembo",
+          "cloud_provider": "multi",
+          "data": {
+            "description": "Deploy FastAPI, Flask, HTML apps from services folder",
+            "label": "Deploy Service"
+          },
+          "intent": "deploy",
+          "resource_type": "deploy_service"
+        },
+        "position": {
+          "x": 1560,
+          "y": 60
+        },
+        "data": {
+          "description": "Deploy FastAPI, Flask, HTML apps from services folder",
+          "label": "Deploy Service"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-trigger-1-2-1774660105619",
+        "source": "trigger-1",
+        "target": "2",
+        "type": "custom",
+        "data": {
+          "connectionType": "normal",
+          "description": "",
+          "isAnimated": false,
+          "isHighlighted": false,
+          "label": "",
+          "multiConnection": false,
+          "sourceNodeType": "trigger",
+          "status": "established",
+          "targetNodeType": "action"
+        }
+      },
+      {
+        "id": "edge-2-3-1774660114952",
+        "source": "2",
+        "target": "3",
+        "type": "custom",
+        "data": {
+          "connectionType": "normal",
+          "description": "",
+          "isAnimated": false,
+          "isHighlighted": false,
+          "label": "",
+          "multiConnection": false,
+          "sourceNodeType": "action",
+          "status": "established",
+          "targetNodeType": "action"
+        }
+      },
+      {
+        "id": "edge-3-4-1774660128337",
+        "source": "3",
+        "target": "4",
+        "type": "custom",
+        "data": {
+          "connectionType": "normal",
+          "description": "",
+          "isAnimated": false,
+          "isHighlighted": false,
+          "label": "",
+          "multiConnection": false,
+          "sourceNodeType": "action",
+          "status": "established",
+          "targetNodeType": "action"
+        }
+      }
+    ],
+    "configuration": {
+      "environment": "production",
+      "region": "us-east-1",
+      "timeout": 300,
+      "retry_attempts": 3,
+      "error_handling": "stop",
+      "timezone": "UTC"
+    }
+  }
+}
