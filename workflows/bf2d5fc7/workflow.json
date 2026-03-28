@@ -1,0 +1,274 @@
+{
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "type": "trigger",
+      "config": {
+        "_organization": "joelwembo",
+        "_username": "joelwembo",
+        "cloud_provider": "internal",
+        "data": {
+          "description": "Start your workflow - drag nodes from the sidebar to build your infrastructure",
+          "label": "Trigger"
+        },
+        "description": "Workflow entry point",
+        "intent": "workflow_start",
+        "resource_type": "workflow_trigger"
+      },
+      "position": {
+        "x": -1065,
+        "y": 135
+      },
+      "data": {
+        "description": "Start your workflow - drag nodes from the sidebar to build your infrastructure",
+        "label": "Trigger",
+        "properties": {}
+      }
+    },
+    {
+      "id": "2",
+      "type": "action",
+      "config": {
+        "_organization": "joelwembo",
+        "_username": "joelwembo",
+        "cloud_provider": "cloudflare",
+        "data": {
+          "description": "SSL/TLS certificates",
+          "label": "Cloudflare SSL"
+        },
+        "intent": "provision_ssl",
+        "resource_type": "cloudflare_certificate_pack",
+        "type": "advanced"
+      },
+      "position": {
+        "x": 270,
+        "y": 240
+      },
+      "data": {
+        "description": "SSL/TLS certificates",
+        "label": "Cloudflare SSL"
+      }
+    },
+    {
+      "id": "3",
+      "type": "action",
+      "config": {
+        "_organization": "joelwembo",
+        "_username": "joelwembo",
+        "cloud_provider": "aws",
+        "data": {
+          "description": "Serverless compute",
+          "label": "Cloud Functions"
+        },
+        "intent": "provision_serverless",
+        "resource_type": "aws_lambda_function"
+      },
+      "position": {
+        "x": 945,
+        "y": -60
+      },
+      "data": {
+        "description": "Serverless compute",
+        "label": "Cloud Functions"
+      }
+    },
+    {
+      "id": "4",
+      "type": "action",
+      "config": {
+        "_organization": "joelwembo",
+        "_username": "joelwembo",
+        "cloud_provider": "aws",
+        "data": {
+          "description": "Data warehouse",
+          "label": "BigQuery"
+        },
+        "intent": "execute_node",
+        "resource_type": "aws_lambda_function"
+      },
+      "position": {
+        "x": 870,
+        "y": 195
+      },
+      "data": {
+        "description": "Data warehouse",
+        "label": "BigQuery"
+      }
+    },
+    {
+      "id": "5",
+      "type": "integration",
+      "config": {
+        "_organization": "joelwembo",
+        "_username": "joelwembo",
+        "cloud_provider": "multi",
+        "data": {
+          "description": "Connect to Make scenarios",
+          "label": "Make (Integromat)"
+        },
+        "intent": "trigger_make",
+        "resource_type": "make"
+      },
+      "position": {
+        "x": -330,
+        "y": 375
+      },
+      "data": {
+        "description": "Connect to Make scenarios",
+        "label": "Make (Integromat)"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-2-3-1774661628152",
+      "source": "2",
+      "target": "3",
+      "type": "custom",
+      "data": {
+        "connectionType": "normal",
+        "description": "",
+        "isAnimated": false,
+        "isHighlighted": true,
+        "label": "",
+        "multiConnection": true,
+        "sourceNodeType": "action",
+        "status": "established",
+        "targetNodeType": "action"
+      }
+    },
+    {
+      "id": "edge-2-4-1774661632052",
+      "source": "2",
+      "target": "4",
+      "type": "custom",
+      "data": {
+        "connectionType": "normal",
+        "description": "",
+        "isAnimated": false,
+        "isHighlighted": true,
+        "label": "",
+        "multiConnection": true,
+        "sourceNodeType": "action",
+        "status": "established",
+        "targetNodeType": "action"
+      }
+    },
+    {
+      "id": "edge-5-2-1774661637868",
+      "source": "5",
+      "target": "2",
+      "type": "custom",
+      "data": {
+        "connectionType": "normal",
+        "description": "",
+        "isAnimated": false,
+        "isHighlighted": false,
+        "label": "",
+        "multiConnection": false,
+        "sourceNodeType": "integration",
+        "status": "established",
+        "targetNodeType": "action"
+      }
+    },
+    {
+      "id": "edge-trigger-1-5-1774661651248",
+      "source": "trigger-1",
+      "target": "5",
+      "type": "custom",
+      "data": {
+        "connectionType": "normal",
+        "description": "",
+        "isAnimated": false,
+        "isHighlighted": false,
+        "label": "",
+        "multiConnection": false,
+        "sourceNodeType": "trigger",
+        "status": "established",
+        "targetNodeType": "integration"
+      }
+    }
+  ],
+  "metadata": {
+    "name": "NextWorkflow1",
+    "description": "Visual workflow execution",
+    "version": "1.0.0",
+    "error_handling": "stop",
+    "timezone": "UTC",
+    "retry_attempts": 3,
+    "settings": {
+      "active": true,
+      "creation": {
+        "cicd": {
+          "provider": "github-actions"
+        },
+        "clone_terraform": false,
+        "git": {
+          "auto_commit": false,
+          "branch": "dev",
+          "provider": "github",
+          "repo_url": "https://github.com/valtunox/va_studio_frontend_starter.git"
+        },
+        "target_node": {
+          "id": "node-1",
+          "ip": "127.0.0.1",
+          "is_primary": true,
+          "name": "joelwembo",
+          "port": 8744,
+          "status": "online"
+        },
+        "target_type": "cloud-node"
+      },
+      "description": "",
+      "environment": {
+        "variables": {}
+      },
+      "errorHandling": {
+        "maxRetries": 3,
+        "mode": "stop",
+        "retryDelay": 1000
+      },
+      "execution": {
+        "executionOrder": "last-first",
+        "maxExecutions": 100,
+        "saveDataSuccessOnly": false,
+        "saveExecutionData": true,
+        "timeout": 3600
+      },
+      "metadata": {
+        "category": "",
+        "tags": [],
+        "version": "1.0.0"
+      },
+      "name": "NextWorkflow1",
+      "notifications": {
+        "channels": [],
+        "onError": true,
+        "onSuccess": false,
+        "onWarning": false
+      },
+      "schedule": {
+        "cronExpression": "0 * * * *",
+        "enabled": false,
+        "timezone": "UTC"
+      },
+      "security": {
+        "allowedUsers": [],
+        "ipWhitelist": [],
+        "rateLimit": 100,
+        "requireAuth": false
+      },
+      "webhook": {
+        "authentication": "none",
+        "enabled": false,
+        "httpMethod": "POST",
+        "path": "",
+        "responseMode": "lastNode"
+      }
+    }
+  },
+  "workflow_id": "9a36bad1-4c08-41a7-8863-1132857d9daf",
+  "session_id": "bf2d5fc7-8bb7-493c-9cf5-aadb13092e89",
+  "terraform_code": "# =============================================================================\n# TERRAFORM CONFIGURATION - Auto-generated from Workflow Canvas\n# Generated: 2026-03-28T01:34:42.234Z\n# Nodes: 5 | Connections: 4\n# =============================================================================\n\nterraform {\n  required_version = \"\u003e= 1.0\"\n  required_providers {\n    cloudflare = {\n      source  = \"cloudflare/cloudflare\"\n      version = \"~\u003e 4.0\"\n    }\n    google = {\n      source  = \"hashicorp/google\"\n      version = \"~\u003e 5.0\"\n    }\n    http = {\n      source  = \"hashicorp/http\"\n      version = \"~\u003e 3.0\"\n    }\n  }\n}\n\nprovider \"cloudflare\" {\n  api_token = var.cloudflare_api_token\n}\n\nprovider \"google\" {\n  project = var.gcp_project_id\n  region  = var.gcp_region\n}\n\n# =============================================================================\n# VARIABLES\n# =============================================================================\n\nvariable \"gcp_project_id\" {\n  description = \"GCP project ID\"\n  type        = string\n}\nvariable \"gcp_region\" {\n  description = \"GCP region\"\n  type        = string\n  default     = \"us-central1\"\n}\n\nvariable \"cloudflare_api_token\" {\n  description = \"Cloudflare API token\"\n  type        = string\n  sensitive   = true\n}\n\n# =============================================================================\n# DATA SOURCES - HTTP Requests (Execute BEFORE resources)\n# Use these to trigger external APIs, webhooks, or pre-deploy checks\n# =============================================================================\n\ndata \"http\" \"make_integromat_5\" {\n  url    = \"https://hook.integromat.com\"\n  method = \"POST\"\n\n  request_headers = {\n    Accept = \"application/json\"\n  }\n\n  request_body = jsonencode({\n    status  = \"initializing\"\n    source  = \"terraform\"\n  })\n\n  # Lifecycle: This data source runs during plan/apply refresh phase\n  # Any resource that references this will wait for the HTTP call to complete\n}\n\n# =============================================================================\n# RESOURCES\n# =============================================================================\n\nresource \"cloudflare_certificate_pack\" \"cloudflare_ssl_2\" {\n  type = \"advanced\"\n}\n\nresource \"google_cloudfunctions_function\" \"cloud_functions_3\" {\n  runtime = \"python312\"\n\n  tags = {\n    Name        = \"cloud_functions_3\"\n    Environment = \"development\"\n    ManagedBy   = \"terraform\"\n    CreatedBy   = \"workflow-canvas\"\n  }\n\n  depends_on = [\n    cloudflare_certificate_pack.cloudflare_ssl_2,\n  ]\n}\n\nresource \"google_bigquery_dataset\" \"bigquery_4\" {\n\n  tags = {\n    Name        = \"bigquery_4\"\n    Environment = \"development\"\n    ManagedBy   = \"terraform\"\n    CreatedBy   = \"workflow-canvas\"\n  }\n\n  depends_on = [\n    cloudflare_certificate_pack.cloudflare_ssl_2,\n  ]\n}\n\n# =============================================================================\n# OUTPUTS\n# =============================================================================\n\noutput \"cloudflare_ssl_2_id\" {\n  description = \"ID of cloudflare_ssl_2\"\n  value       = cloudflare_certificate_pack.cloudflare_ssl_2.id\n}\n\noutput \"cloud_functions_3_id\" {\n  description = \"ID of cloud_functions_3\"\n  value       = google_cloudfunctions_function.cloud_functions_3.id\n}\n\noutput \"bigquery_4_id\" {\n  description = \"ID of bigquery_4\"\n  value       = google_bigquery_dataset.bigquery_4.id\n}\n\noutput \"make_integromat_5_status\" {\n  description = \"HTTP status code for make_integromat_5\"\n  value       = data.http.make_integromat_5.status_code\n}\n",
+  "use_frontend_terraform": true
+}
