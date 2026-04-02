@@ -483,7 +483,7 @@ export default function EcommerceMarketplace({ onNavigate }) {
 
   const banners = [
     { title: 'Mega Sale', subtitle: 'Up to 70% Off Electronics', cta: 'Shop Now', gradient: 'from-orange-500 via-amber-500 to-yellow-400', image: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=800&h=400&fit=crop' },
-    { title: 'Fashion Week', subtitle: 'Trending Styles at Unbeatable Prices', cta: 'Explore', gradient: 'from-pink-500 via-rose-500 to-red-400', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=400&fit=crop' },
+    { title: 'Fashion Week 122323', subtitle: 'Trending Styles at Unbeatable Prices', cta: 'Explore', gradient: 'from-pink-500 via-rose-500 to-red-400', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=400&fit=crop' },
     { title: 'Home Refresh', subtitle: 'Transform Your Space for Less', cta: 'Discover', gradient: 'from-teal-500 via-emerald-500 to-green-400', image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=800&h=400&fit=crop' },
   ]
 
