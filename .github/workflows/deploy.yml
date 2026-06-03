@@ -1,0 +1,39 @@
+name: Deploy React App to vxcloud
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # Build gate — fail fast if the Vite app doesn't compile.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build          # Vite -> dist/
+
+  # Deploy via the vxcloud action. Uses a fresh checkout (source only, no
+  # node_modules) — `vxcli deploy react … .` zips it and the platform builds it.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to vxcloud
+        uses: prodxcloud/vxcloud-deploy-action@v1
+        with:
+          username: ${{ secrets.VXCLOUD_USERNAME }}
+          api-key:  ${{ secrets.VXCLOUD_API_KEY }}
+          command: >-
+            deploy react --app-name vxstudio-frontend
+            --build-mode production --http-port 80
+            --host ${{ vars.HOST }} --ssh-user ubuntu --key-pair-name ${{ vars.KEY_PAIR }}
+            --enable-ssl --domain ${{ vars.DOMAIN }} --ssl-email ${{ vars.SSL_EMAIL }}
+            .
